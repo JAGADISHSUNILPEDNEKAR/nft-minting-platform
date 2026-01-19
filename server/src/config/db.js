@@ -3,11 +3,8 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nft-platform', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    
+    const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nft-platform');
+
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
@@ -15,4 +12,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports
+module.exports = connectDB;

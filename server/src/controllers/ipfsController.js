@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Initialize Pinata
-const pinata = pinataSDK(
+const pinata = new pinataSDK(
   process.env.PINATA_API_KEY,
   process.env.PINATA_SECRET_KEY
 );
@@ -34,7 +34,7 @@ const upload = multer({
     const allowedTypes = /jpeg|jpg|png|gif|mp4|mp3|pdf|svg/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
-    
+
     if (mimetype && extname) {
       return cb(null, true);
     } else {
@@ -48,14 +48,14 @@ const uploadToIPFS = async (req, res) => {
     if (err) {
       return res.status(400).json({ message: err.message });
     }
-    
+
     try {
       if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
-      
+
       const readableStreamForFile = fs.createReadStream(req.file.path);
-      
+
       const options = {
         pinataMetadata: {
           name: req.file.originalname,
@@ -68,12 +68,12 @@ const uploadToIPFS = async (req, res) => {
           cidVersion: 0
         }
       };
-      
+
       const result = await pinata.pinFileToIPFS(readableStreamForFile, options);
-      
+
       // Clean up uploaded file
       fs.unlinkSync(req.file.path);
-      
+
       res.json({
         ipfsHash: result.IpfsHash,
         pinSize: result.PinSize,
@@ -82,12 +82,12 @@ const uploadToIPFS = async (req, res) => {
       });
     } catch (error) {
       console.error('IPFS upload error:', error);
-      
+
       // Clean up file on error
       if (req.file && fs.existsSync(req.file.path)) {
         fs.unlinkSync(req.file.path);
       }
-      
+
       res.status(500).json({ message: 'Failed to upload to IPFS' });
     }
   });
@@ -96,11 +96,11 @@ const uploadToIPFS = async (req, res) => {
 const uploadJSONToIPFS = async (req, res) => {
   try {
     const { metadata } = req.body;
-    
+
     if (!metadata) {
       return res.status(400).json({ message: 'Metadata is required' });
     }
-    
+
     const options = {
       pinataMetadata: {
         name: metadata.name || 'NFT Metadata',
@@ -113,9 +113,9 @@ const uploadJSONToIPFS = async (req, res) => {
         cidVersion: 0
       }
     };
-    
+
     const result = await pinata.pinJSONToIPFS(metadata, options);
-    
+
     res.json({
       ipfsHash: result.IpfsHash,
       pinSize: result.PinSize,
@@ -131,10 +131,10 @@ const uploadJSONToIPFS = async (req, res) => {
 const getFromIPFS = async (req, res) => {
   try {
     const { hash } = req.params;
-    
+
     // You can use Pinata gateway or any public IPFS gateway
     const url = `https://gateway.pinata.cloud/ipfs/${hash}`;
-    
+
     res.json({ url });
   } catch (error) {
     console.error('IPFS get error:', error);
