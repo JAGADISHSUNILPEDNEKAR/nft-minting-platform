@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+.nyc_output
+
+# Production
+build
+dist
+.output
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Hardhat
+contracts/artifacts
+contracts/cache
+contracts/contract-info.json
+contracts/typechain-types
+contracts/coverage.json
+contracts/gasReporterOutput.json
+
+# Client
+client/dist
+client/build
+client/.output
