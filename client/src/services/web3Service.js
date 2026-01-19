@@ -1,7 +1,7 @@
 // src/services/web3Service.js
 import { ethers } from 'ethers';
 import { CONTRACT_ADDRESS, CHAIN_CONFIG } from '../utils/constants';
-import contractABI from '../../contracts/artifacts/contracts/NFTMinting.sol/NFTMinting.json';
+import contractABI from '../contracts/NFTMinting.json';
 
 class Web3Service {
   constructor() {
